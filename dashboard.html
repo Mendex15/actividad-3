@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="expires" content="0" />
+    <title>Sistema de Nómina - Dashboard</title>
+    <link rel="stylesheet" href="styles-dashboard.css?v=1">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <div class="login-box">
+                <h1>Sistema de Nómina</h1>
+                <p class="login-subtitle">Inicia sesión para continuar</p>
+                
+                <form id="loginForm" class="login-form">
+                    <div class="form-group">
+                        <label>Usuario:</label>
+                        <input type="text" id="loginUsername" required placeholder="Ej: admin" autocomplete="username">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Contraseña:</label>
+                        <input type="password" id="loginPassword" required placeholder="••••••••" autocomplete="current-password">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-full">Iniciar Sesión</button>
+                    <p class="login-error" id="loginError"></p>
+                </form>
+
+                <div class="login-footer">
+                    <p><strong>Credenciales de prueba:</strong></p>
+                    <p>Usuario: <code>admin</code></p>
+                    <p>Contraseña: <code>admin123</code></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Layout -->
+    <div id="dashboardScreen" class="dashboard-layout" style="display: none;">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Sistema Nómina</h2>
+            </div>
+
+            <div class="sidebar-section-title">MAIN</div>
+
+            <nav class="sidebar-menu" aria-label="Navegación principal">
+                <button class="menu-item" data-module="dashboard" data-section="dashboard">
+                    <span class="menu-icon">📊</span>
+                    <span class="menu-label">Dashboard</span>
+                </button>
+
+                <button class="menu-item" data-module="employees" data-section="register">
+                    <span class="menu-icon">➕</span>
+                    <span class="menu-label">Registrar Empleado</span>
+                </button>
+
+                <button class="menu-item" data-module="employees" data-section="list">
+                    <span class="menu-icon">👥</span>
+                    <span class="menu-label">Empleados</span>
+                </button>
+
+                <button class="menu-item" data-module="payroll" data-section="summary">
+                    <span class="menu-icon">💰</span>
+                    <span class="menu-label">Resumen Nómina</span>
+                </button>
+
+                <button class="menu-item" data-module="payroll" data-section="history">
+                    <span class="menu-icon">📋</span>
+                    <span class="menu-label">Historial Nóminas</span>
+                </button>
+
+                <button class="menu-item" data-module="periods" data-section="periods">
+                    <span class="menu-icon">🔒</span>
+                    <span class="menu-label">Períodos</span>
+                </button>
+
+                <button class="menu-item" data-module="security" data-section="security">
+                    <span class="menu-icon">🔐</span>
+                    <span class="menu-label">Seguridad</span>
+                </button>
+
+                <button class="menu-item" data-module="reports" data-section="reports">
+                    <span class="menu-icon">📈</span>
+                    <span class="menu-label">Reportes</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="sidebar-footer-user">
+                    <div class="user-avatar" aria-hidden="true">U</div>
+                    <div class="user-info">
+                        <div class="user-name" id="sidebarUserName">Admin</div>
+                        <div class="user-role" id="sidebarUserRole">Admin</div>
+                    </div>
+                </div>
+
+                <button id="logoutBtn" class="btn btn-logout" type="button">
+                    <span class="menu-icon" aria-hidden="true">↩</span>
+                    Cerrar sesión
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="header">
+                <div class="header-content">
+                    <h1 id="pageTitle">Home</h1>
+                    <button id="toggleSidebar" class="btn-toggle-sidebar">☰</button>
+                </div>
+            </div>
+
+            <div class="content-container">
+                <div id="moduleContainer" class="module-container">
+                    <!-- Los módulos se cargan dinámicamente aquí -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <!-- Utils (PRIMERO - sin dependencias) -->
+    <script src="js/utils/constants.js?v=2"></script>
+    <script src="js/utils/helpers.js?v=2"></script>
+    <script src="js/utils/Validators.js?v=13"></script>
+    
+    <!-- Core Services (SEGUNDO - base de la aplicación) -->
+    <script src="js/services/api.js?v=5"></script>
+    
+    <!-- New Services (TERCERO - dependen de APIService) -->
+    <script src="js/services/AuthService.js?v=1"></script>
+    <script src="js/services/UIStateManager.js?v=1"></script>
+    <script src="js/services/MenuController.js?v=1"></script>
+    <script src="js/services/router.js?v=3"></script>
+    
+    <!-- Models -->
+    <script src="js/models/Employee.js?v=13"></script>
+    <script src="js/models/SalariedEmployee.js?v=13"></script>
+    <script src="js/models/HourlyEmployee.js?v=13"></script>
+    <script src="js/models/CommissionEmployee.js?v=13"></script>
+    <script src="js/models/TemporaryEmployee.js?v=13"></script>
+    
+    <!-- Legacy Services -->
+    <script src="js/services/PayrollCalculator.js?v=13"></script>
+    <script src="js/services/EmployeeManager.js?v=13"></script>
+    <script src="js/services/ReportGenerator.js?v=13"></script>
+    <script src="js/services/PayslipGenerator.js?v=13"></script>
+    
+    <!-- Modules -->
+    <script src="js/modules/dashboard.js?v=4"></script>
+    <script src="js/modules/employees.js?v=5"></script>
+    <script src="js/modules/payroll.js?v=5"></script>
+    <script src="js/modules/periods.js?v=4"></script>
+    <script src="js/modules/security.js?v=3"></script>
+    <script src="js/modules/reports.js?v=5"></script>
+
+    <!-- Main App (ÚLTIMO - cuando todas las dependencias están disponibles) -->
+    <script src="js/dashboard-app.js?v=2"></script>
+</body>
+</html>

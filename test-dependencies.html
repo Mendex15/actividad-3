@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Verificación de Dependencias</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .test {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .test.pass {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .test.fail {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .summary {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .summary.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .summary.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✓ Verificación de Dependencias</h1>
+        <div id="results"></div>
+    </div>
+
+    <!-- Cargar todos los scripts -->
+    <script src="js/utils/constants.js?v=2"></script>
+    <script src="js/utils/helpers.js?v=2"></script>
+    <script src="js/utils/Validators.js?v=13"></script>
+    <script src="js/services/api.js?v=5"></script>
+    <script src="js/services/AuthService.js?v=1"></script>
+    <script src="js/services/UIStateManager.js?v=1"></script>
+    <script src="js/services/MenuController.js?v=1"></script>
+    <script src="js/services/router.js?v=3"></script>
+
+    <script>
+        // Esperar a que todos los scripts se carguen
+        setTimeout(() => {
+            const resultsDiv = document.getElementById('results');
+            const requiredDependencies = [
+                'Constants',
+                'Helpers',
+                'Validators',
+                'APIService',
+                'AuthService',
+                'UIStateManager',
+                'MenuController',
+                'Router'
+            ];
+
+            let passCount = 0;
+            let failCount = 0;
+
+            requiredDependencies.forEach(dep => {
+                const testDiv = document.createElement('div');
+                testDiv.className = 'test';
+
+                const isAvailable = typeof window[dep] !== 'undefined';
+                
+                if (isAvailable) {
+                    testDiv.classList.add('pass');
+                    testDiv.innerHTML = `
+                        <span>✅ ${dep}</span>
+                        <span style="font-size: 0.9em; opacity: 0.7;">Disponible</span>
+                    `;
+                    passCount++;
+                } else {
+                    testDiv.classList.add('fail');
+                    testDiv.innerHTML = `
+                        <span>❌ ${dep}</span>
+                        <span style="font-size: 0.9em; opacity: 0.7;">NO DISPONIBLE</span>
+                    `;
+                    failCount++;
+                }
+
+                resultsDiv.appendChild(testDiv);
+            });
+
+            // Resumen
+            const summaryDiv = document.createElement('div');
+            summaryDiv.className = 'summary';
+            
+            if (failCount === 0) {
+                summaryDiv.classList.add('success');
+                summaryDiv.innerHTML = `
+                    ✓ ¡ÉXITO! Todas las ${passCount} dependencias están disponibles<br>
+                    La aplicación debería cargar sin errores.
+                `;
+            } else {
+                summaryDiv.classList.add('error');
+                summaryDiv.innerHTML = `
+                    ✗ ERROR: ${failCount} de ${requiredDependencies.length} dependencias faltantes<br>
+                    Revisar orden de scripts en dashboard.html
+                `;
+            }
+
+            resultsDiv.appendChild(summaryDiv);
+
+            // Log en consola
+            console.log(`%c✓ Verificación completada: ${passCount}/${requiredDependencies.length} OK`, 
+                failCount === 0 ? 'color: green; font-weight: bold' : 'color: red; font-weight: bold');
+        }, 1000); // Esperar 1 segundo para que todos los scripts se carguen
+    </script>
+</body>
+</html>
