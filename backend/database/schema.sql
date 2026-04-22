@@ -9,16 +9,16 @@
  * 3. Ejecuta en tu conexión MySQL
  */
 
--- ========================================
+--  
 -- CREAR BASE DE DATOS
--- ========================================
+--  
 
 CREATE DATABASE IF NOT EXISTS nomina_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE nomina_db;
 
--- ========================================
+-- 
 -- TABLA: users (Usuarios del sistema)
--- ========================================
+-- 
 
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -34,9 +34,8 @@ CREATE TABLE users (
     INDEX idx_email (email)
 );
 
--- ========================================
 -- TABLA: employees (Empleados)
--- ========================================
+-- ======
 
 CREATE TABLE employees (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -71,10 +70,8 @@ CREATE TABLE employees (
     INDEX idx_name (name)
 );
 
--- ========================================
 -- TABLA: payroll_history (Histórico de Nóminas)
--- ========================================
-
+-- 
 CREATE TABLE payroll_history (
     id INT AUTO_INCREMENT PRIMARY KEY,
     employee_id INT NOT NULL,
@@ -101,9 +98,9 @@ CREATE TABLE payroll_history (
     UNIQUE KEY unique_payroll (employee_id, month, year)
 );
 
--- ========================================
+-- 
 -- TABLA: company_settings (Configuración de la Empresa)
--- ========================================
+--
 
 CREATE TABLE company_settings (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -132,9 +129,9 @@ CREATE TABLE company_settings (
     UNIQUE KEY unique_company (user_id)
 );
 
--- ========================================
+-- 
 -- TABLA: audit_log (Registro de Auditoría)
--- ========================================
+-- 
 
 CREATE TABLE audit_log (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -153,9 +150,9 @@ CREATE TABLE audit_log (
     INDEX idx_created_at (created_at)
 );
 
--- ========================================
+-- 
 -- INSERTS DE PRUEBA
--- ========================================
+-- 
 
 -- Usuario Admin (password: admin123)
 -- Hash generado con bcrypt
@@ -165,9 +162,9 @@ INSERT INTO users (username, email, password_hash, full_name, role) VALUES
 -- Configuración por defecto
 INSERT INTO company_settings (user_id, company_name) VALUES (1, 'Mi Empresa');
 
--- ========================================
+--
 -- ÍNDICES ADICIONALES PARA PERFORMANCE
--- ========================================
+-- 
 
 CREATE INDEX idx_payroll_employee_period ON payroll_history(employee_id, year, month);
 CREATE INDEX idx_audit_timestamp ON audit_log(created_at DESC);
