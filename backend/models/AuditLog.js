@@ -1,3 +1,9 @@
+/**
+ * MODELO: AuditLog
+ *
+ * Registra y consulta eventos de auditoría del sistema.
+ */
+
 const { query: dbQuery } = require('../config/database');
 
 class AuditLog {

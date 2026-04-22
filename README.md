@@ -1,291 +1,326 @@
-# 🏢 Sistema de Nómina Empresarial
+# Sistema de Nomina Empresarial
 
-**Aplicación web de gestión de nómina desarrollada con Principios SOLID**
+Aplicacion web de gestion de nomina con backend en Node.js/Express y frontend en JavaScript sin framework. La arquitectura sigue principios SOLID para mantener responsabilidades claras y codigo mantenible.
 
-## 📋 Descripción General
+## Caracteristicas principales
 
-Este sistema de nómina es una aplicación web completa que permite gestionar diferentes tipos de empleados con distintas formas de calcular salarios, beneficios y deducciones. La arquitectura está diseñada siguiendo los **Principios SOLID** para garantizar código limpio, mantenible y escalable.
+- Autenticacion con JWT y control de permisos por rol.
+- Gestion de empleados con multiples tipos de contrato.
+- Calculo de nomina por periodo y resumenes mensuales.
+- Reportes con graficos y exportacion a CSV.
+- Registro de auditoria (altas, cambios y eliminaciones).
 
-## ✨ Características Principales
+## Tecnologias
 
-### Tipos de Empleados Soportados
+- Backend: Node.js, Express, MySQL (mysql2), JWT, bcryptjs
+- Frontend: HTML5, CSS3, JavaScript ES6+, Chart.js, html2pdf
 
-1. **Empleado Asalariado**
-   - Salario fijo mensual
-   - Bono de antigüedad: 10% si tiene >5 años
-   - Bono alimentación: $1.000.000/mes
+## Requisitos
 
-2. **Empleado por Horas**
-   - Pago por horas trabajadas
-   - Horas extras (>40h): 1.5x la tarifa
-   - Fondo de ahorro opcional: 2% (si tiene >1 año)
+- Node.js 18+
+- MySQL 8+
+- Python 3 (solo para servir el frontend con http.server)
 
-3. **Empleado por Comisión**
-   - Salario base + comisión por ventas
-   - Bono adicional: 3% si ventas >$20.000.000
-   - Bono alimentación: $1.000.000/mes
+## Instalacion y configuracion
 
-4. **Empleado Temporal**
-   - Salario fijo mensual
-   - Sin bonos ni beneficios adicionales
+### 1) Backend
 
-### Cálculos Automáticos
-
-- ✅ **Deducciones Obligatorias**: Seguro Social y Pensión (4% del salario bruto)
-- ✅ **Validaciones**: Salario neto nunca negativo, horas no negativas, ventas ≥ $0
-- ✅ **Formatos**: Moneda colombiana ($COP) automática
-- ✅ **Reportes**: Resumen completo de nómina por tipo de empleado
-
-## 🏗️ Arquitectura - Principios SOLID
-
-### 1. **Single Responsibility Principle (SRP)**
-
-Cada clase tiene una única responsabilidad:
-
-```
-Employee.js          → Define el contrato de empleado
-SalariedEmployee.js  → Calcula nómina de asalariados
-HourlyEmployee.js    → Calcula nómina por horas
-CommissionEmployee.js→ Calcula nómina por comisión
-TemporaryEmployee.js → Calcula nómina temporal
-PayrollCalculator.js → Calcula totales y reportes
-EmployeeManager.js   → Gestiona colección de empleados
-Validators.js        → Valida datos de entrada
+```bash
+cd backend
+npm install
 ```
 
-### 2. **Open/Closed Principle (OCP)**
+Crear archivo .env a partir del ejemplo:
 
-- ✅ **Abierto para extensión**: Se pueden crear nuevos tipos de empleados sin modificar el código existente
-- ✅ **Cerrado para modificación**: La clase `Employee` no cambia cuando se añaden nuevos tipos
-
-**Ejemplo**: Para añadir un nuevo tipo (ej: Empleado Ejecutivo), solo creas una nueva clase que extienda `Employee`.
-
-### 3. **Liskov Substitution Principle (LSP)**
-
-Todos los tipos de empleados pueden sustituir a `Employee` sin romper la funcionalidad:
-
-```javascript
-const employees = [
-    new SalariedEmployee(...),
-    new HourlyEmployee(...),
-    new CommissionEmployee(...),
-    new TemporaryEmployee(...)
-];
-
-// Todos pueden ser tratados uniformemente
-employees.forEach(emp => {
-    const salary = emp.calculateNetSalary(); // ✅ Funciona para todos
-});
+```bash
+copy .env.example .env
 ```
 
-### 4. **Interface Segregation Principle (ISP)**
+Configura las variables principales en .env:
 
-Las clases no dependen de interfaces que no usan:
-
-- `SalariedEmployee` no incluye campos de `HourlyEmployee` (hourlyRate, hoursWorked)
-- `HourlyEmployee` no incluye campos de `CommissionEmployee` (sales, commissionRate)
-- Cada clase define solo sus campos necesarios
-
-### 5. **Dependency Inversion Principle (DIP)**
-
-Los servicios dependen de abstracciones, no de concreciones:
-
-```javascript
-// ✅ CORRECTO: EmployeeManager usa la abstracción Employee
-calculateTotalPayroll(employees) {
-    return employees.map(emp => this.calculateEmployeePayroll(emp));
-}
-
-// ❌ INCORRECTO: Dependería de clases concretas
-if (emp instanceof SalariedEmployee) { ... }
+```
+PORT=3001
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=
+DB_NAME=nomina_db
+JWT_SECRET=tu_clave_secreta
+JWT_EXPIRE=24h
+FRONTEND_URL=http://localhost:8000
 ```
 
-## 📁 Estructura de Archivos
+Inicializa la base de datos:
+
+```bash
+node init-db.js
+```
+
+Verifica la conexion:
+
+```bash
+node verify-db.js
+```
+
+Inicia el servidor:
+
+```bash
+npm start
+```
+
+### 2) Frontend
+
+En la raiz del proyecto:
+
+```bash
+python -m http.server 8000
+```
+
+Abre en el navegador:
+
+```
+http://localhost:8000/dashboard.html
+```
+
+## Credenciales de prueba
+
+- Usuario: admin
+- Contrasena: admin123
+
+## Estructura de archivos
 
 ```
 Sistema-Nomina/
-│
-├── index.html                 # Página principal
-├── styles.css                 # Estilos de la aplicación
-│
+├── backend/
+│   ├── .env
+│   ├── .env.example
+│   ├── add-columns.js
+│   ├── check-audit.js
+│   ├── check-employee.js
+│   ├── config/
+│   │   └── database.js
+│   ├── controllers/
+│   │   ├── authController.js
+│   │   ├── employeeController.js
+│   │   └── payrollController.js
+│   ├── database/
+│   │   └── schema.sql
+│   ├── init-db.js
+│   ├── middleware/
+│   │   └── auth.js
+│   ├── models/
+│   │   ├── AuditLog.js
+│   │   ├── Employee.js
+│   │   ├── PayrollHistory.js
+│   │   └── User.js
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── reset-password.js
+│   ├── routes/
+│   │   ├── auditRoutes.js
+│   │   ├── authRoutes.js
+│   │   ├── employeeRoutes.js
+│   │   └── payrollRoutes.js
+│   ├── server.js
+│   └── verify-db.js
+├── dashboard.html
+├── GUIA_ARQUITECTURA.md
 ├── js/
-│   ├── app.js                 # Aplicación principal (UI)
-│   │
-│   ├── models/                # Modelos de dominio
-│   │   ├── Employee.js        # Clase base abstracta
-│   │   ├── SalariedEmployee.js
-│   │   ├── HourlyEmployee.js
+│   ├── dashboard-app.js
+│   ├── models/
 │   │   ├── CommissionEmployee.js
+│   │   ├── Employee.js
+│   │   ├── HourlyEmployee.js
+│   │   ├── SalariedEmployee.js
 │   │   └── TemporaryEmployee.js
-│   │
-│   ├── services/              # Servicios de lógica de negocio
+│   ├── modules/
+│   │   ├── dashboard.js
+│   │   ├── employees.js
+│   │   ├── payroll.js
+│   │   ├── periods.js
+│   │   ├── reports.js
+│   │   └── security.js
+│   ├── services/
+│   │   ├── api.js
+│   │   ├── AuthService.js
+│   │   ├── EmployeeManager.js
+│   │   ├── MenuController.js
 │   │   ├── PayrollCalculator.js
-│   │   └── EmployeeManager.js
-│   │
-│   └── utils/                 # Utilidades
-│       └── Validators.js      # Validaciones y formateos
-│
-├── README.md                  # Este archivo
-└── SOLID_PRINCIPLES.md        # Documentación detallada de SOLID
+│   │   ├── PayslipGenerator.js
+│   │   ├── ReportGenerator.js
+│   │   ├── router.js
+│   │   └── UIStateManager.js
+│   └── utils/
+│       ├── constants.js
+│       ├── helpers.js
+│       └── Validators.js
+├── REFACTORING_CHANGELOG.md
+├── PRUEBAS_UNITARIAS.js
+├── README.md
+├── styles-dashboard.css
+└── test-dependencies.html
 ```
 
-## 🚀 Cómo Usar
+Nota: node_modules/ no se incluye en el arbol.
 
-### 1. Abrir la Aplicación
+## API principal
+
+Base URL: http://localhost:3001/api
+
+- Auth
+    - POST /auth/login
+    - POST /auth/register
+    - GET /auth/profile
+    - PUT /auth/profile
+    - POST /auth/change-password
+
+- Empleados
+    - GET /employees
+    - POST /employees
+    - GET /employees/:id
+    - PUT /employees/:id
+    - DELETE /employees/:id
+    - GET /employees/statistics
+    - POST /employees/:id/payroll
+    - POST /employees/generate-payroll
+
+- Nomina
+    - GET /payroll/by-period
+    - GET /payroll/summary
+    - GET /payroll/compare
+    - GET /payroll/pending
+    - GET /payroll/employee/:id
+    - GET /payroll/employee/:id/:month/:year
+    - PUT /payroll/:id/status
+
+- Auditoria
+    - GET /audit/recent
+    - GET /audit/entity/:type/:id
+    - GET /audit/user/:userId
+    - GET /audit/range
+
+## Scripts utiles (backend)
+
+- node init-db.js (crea el esquema y usuario admin)
+- node verify-db.js (verifica estructura y conexion)
+- node reset-password.js (restablece admin a admin123)
+- node add-columns.js (agrega email/phone en employees)
+- node check-audit.js (inspecciona audit_log)
+- node check-employee.js (inspecciona empleados)
+
+## Pruebas
+
+Se incluye un archivo de pruebas unitarias simples sin framework:
+
+- PRUEBAS_UNITARIAS.js
+
+Ejecucion:
 
 ```bash
-# Simplemente abre index.html en tu navegador
-# O usa un servidor local
-python -m http.server 8000
-# Luego accede a: http://localhost:8000
+node PRUEBAS_UNITARIAS.js
 ```
 
-### 2. Registrar un Empleado
+Cobertura actual de pruebas:
 
-1. Completa el formulario "Registrar Nuevo Empleado"
-2. Selecciona el tipo de empleado
-3. Los campos específicos se mostrarán automáticamente
-4. Haz clic en "Registrar Empleado"
+- Validacion de limites en `AuditLog._toSafeInt`.
+- Middleware `verifyToken` (token valido y token ausente).
+- Middleware `verifyAdmin` (permite admin y bloquea otros roles).
+- Middleware `verifyContador` (permite contador/admin y bloquea usuario).
 
-### 3. Ver Resultados
+Ultima ejecucion registrada: 8/8 pruebas aprobadas.
 
-- **Tarjetas de Empleados**: Información detallada de cada empleado
-- **Resumen de Nómina**: Totales y análisis por tipo
-- **Tabla Estadística**: Desglose completo de la nómina
+## Metodologia de desarrollo de software
 
-## 💻 Ejemplos de Uso
+El proyecto sigue una metodologia iterativa e incremental, combinando buenas practicas de Agile con enfoque tecnico en calidad de codigo.
 
-### Empleado Asalariado
+1. Levantamiento y priorizacion de requerimientos.
+2. Planificacion por entregas pequenas (features y correcciones).
+3. Desarrollo por modulos con responsabilidad unica (SRP).
+4. Refactorizacion continua para mantener bajo acoplamiento.
+5. Validacion funcional manual por flujo de usuario.
+6. Pruebas unitarias de funciones y middleware criticos.
+7. Documentacion tecnica actualizada (arquitectura, changelog, README).
 
-```javascript
-const emp = new SalariedEmployee(
-    "EMP-001",
-    "Juan Pérez",
-    6,              // 6 años de antigüedad
-    3000000         // Salario: $3.000.000
-);
+Principios aplicados en la metodologia:
 
-const payroll = emp.calculateNetSalary();
-// {
-//   grossSalary: 3000000,
-//   bonuses: 300000,        // 10% por antigüedad
-//   benefits: 1000000,      // Bono alimentación
-//   totalIncome: 4300000,
-//   deductions: 120000,     // 4% seguro social
-//   netSalary: 4180000
-// }
-```
+- SOLID para diseno y mantenibilidad.
+- Clean Code para legibilidad.
+- DRY para evitar duplicacion.
+- Trazabilidad basica de cambios en `REFACTORING_CHANGELOG.md`.
 
-### Empleado por Horas
+## Verificacion de cumplimiento SOLID
 
-```javascript
-const emp = new HourlyEmployee(
-    "EMP-002",
-    "María García",
-    2,              // 2 años de antigüedad
-    25000,          // $25.000 por hora
-    45,             // 45 horas trabajadas
-    true            // Quiere fondo de ahorro
-);
+Esta verificacion se realizo sobre frontend y backend con base en la estructura actual del proyecto.
 
-const payroll = emp.calculateNetSalary();
-// {
-//   grossSalary: 1187500,   // 40*25000 + 5*25000*1.5
-//   bonuses: 0,
-//   benefits: 23750,        // 2% fondo de ahorro
-//   totalIncome: 1211250,
-//   deductions: 47500,      // 4% seguro social
-//   netSalary: 1163750
-// }
-```
+### 1. Single Responsibility Principle (SRP)
 
-## 🧪 Validaciones Implementadas
+Estado: Cumplimiento alto.
 
-✅ Nombres no vacíos (mínimo 3 caracteres)
-✅ Años en empresa: 0-100
-✅ Salarios no negativos
-✅ Horas trabajadas no negativas
-✅ Tarifa horaria > $0
-✅ Tasa de comisión entre 0% y 100%
-✅ Ventas ≥ $0
-✅ Salario neto nunca negativo
+Evidencias:
 
-## 📊 Cálculos Incluidos
+- `AuthService` concentra autenticacion y ciclo de token en [js/services/AuthService.js](js/services/AuthService.js).
+- `MenuController` concentra permisos y estado de menu en [js/services/MenuController.js](js/services/MenuController.js).
+- `UIStateManager` concentra estado visual y transiciones de pantalla en [js/services/UIStateManager.js](js/services/UIStateManager.js).
+- Modelos de dominio separados por tipo de empleado en [js/models/Employee.js](js/models/Employee.js), [js/models/SalariedEmployee.js](js/models/SalariedEmployee.js), [js/models/HourlyEmployee.js](js/models/HourlyEmployee.js), [js/models/CommissionEmployee.js](js/models/CommissionEmployee.js), [js/models/TemporaryEmployee.js](js/models/TemporaryEmployee.js).
 
-### Para Todos los Empleados
-- Salario Bruto (específico por tipo)
-- Bonos (según antigüedad y desempeño)
-- Beneficios Adicionales (alimentación, ahorro)
-- **Deducciones Obligatorias: 4% Seguro Social**
-- **Salario Neto Final**
+Oportunidad de mejora:
 
-### Reportes Disponibles
-- Nómina individual detallada
-- Nómina total de todos los empleados
-- Desglose por tipo de empleado
-- Estadísticas del sistema
+- Algunos controladores de backend mezclan validacion, orquestacion y auditoria en un mismo flujo, por ejemplo [backend/controllers/employeeController.js](backend/controllers/employeeController.js). Se puede extraer validacion y auditoria a servicios dedicados.
 
-## 🔒 Características de Seguridad
+### 2. Open/Closed Principle (OCP)
 
-- ✅ Validación de entrada en todos los campos
-- ✅ Manejo de errores robusto
-- ✅ Restricción de valores negativos
-- ✅ Mensajes de error claros al usuario
-- ✅ Confirmación antes de eliminar empleados
+Estado: Cumplimiento medio-alto.
 
-## 🎨 Interfaz de Usuario
+Evidencias:
 
-- Diseño moderno y responsivo
-- Gradientes de color atractivos
-- Cards interactivos para empleados
-- Formulario dinámico según tipo
-- Alertas de confirmación
-- Tabla de estadísticas
+- La jerarquia de empleados permite extender nuevos tipos sin modificar la clase base en [js/models/Employee.js](js/models/Employee.js).
+- La navegacion por modulos permite agregar nuevas rutas y modulos en [js/services/router.js](js/services/router.js).
 
-## 📱 Responsive Design
+Oportunidad de mejora:
 
-La aplicación se adapta a:
-- 💻 Pantallas de escritorio (1200px+)
-- 📱 Tablets (768px-1199px)
-- 📱 Móviles (<768px)
+- Algunos mapeos de roles y permisos son estaticos en [js/services/MenuController.js](js/services/MenuController.js) y [js/utils/constants.js](js/utils/constants.js). Podrian cargarse por configuracion para extender sin tocar codigo.
 
-## 🛠️ Tecnologías Utilizadas
+### 3. Liskov Substitution Principle (LSP)
 
-- **HTML5**: Estructura de la página
-- **CSS3**: Estilos y animaciones
-- **JavaScript ES6+**: Lógica de negocio
-- **Principios SOLID**: Arquitectura del código
+Estado: Cumplimiento alto.
 
-## 📝 Notas de Implementación
+Evidencias:
 
-1. **Abstracción**: La clase `Employee` es abstracta y no se puede instanciar directamente
-2. **Herencia**: Todos los tipos de empleado heredan de `Employee`
-3. **Polimorfismo**: Cada tipo implementa los métodos de cálculo de manera específica
-4. **Inyección de Dependencias**: `EmployeeManager` recibe `PayrollCalculator` en el constructor
-5. **Validación Centralizada**: Todas las validaciones están en `Validators.js`
+- Todas las subclases de empleado implementan el contrato de calculo esperado por el sistema y pueden usarse donde se espera `Employee`, especialmente en [js/services/PayrollCalculator.js](js/services/PayrollCalculator.js).
 
-## 🚀 Próximas Mejoras Sugeridas
+### 4. Interface Segregation Principle (ISP)
 
-- [ ] Persistencia en base de datos
-- [ ] Sistema de autenticación
-- [ ] Exportación a PDF/Excel
-- [ ] Histórico de nóminas
-- [ ] Comparación de períodos
-- [ ] Análisis gráfico de datos
-- [ ] Integración con pasarela de pagos
+Estado: Cumplimiento medio.
 
-## 👨‍💻 Autor
+Evidencias:
 
- **william mendez**
+- Las APIs de servicios frontend estan segmentadas por responsabilidad: autenticacion, UI, menu, API, en [js/services/AuthService.js](js/services/AuthService.js), [js/services/UIStateManager.js](js/services/UIStateManager.js), [js/services/MenuController.js](js/services/MenuController.js), [js/services/api.js](js/services/api.js).
 
-**Desarrollado con Principios SOLID**  
-_Aplicación de Gestión de Nómina_  
-2026
+Oportunidad de mejora:
 
-## 📄 Licencia
+- En backend, varios controladores exponen funciones amplias por modulo en lugar de contratos mas finos por caso de uso, por ejemplo [backend/controllers/authController.js](backend/controllers/authController.js).
 
-Este proyecto es de código abierto y está disponible bajo la licencia MIT.
+### 5. Dependency Inversion Principle (DIP)
 
----
+Estado: Cumplimiento medio.
 
-**¿Necesitas ayuda?** Revisa el archivo `SOLID_PRINCIPLES.md` para una explicación detallada de cómo se aplican los principios SOLID en este proyecto.
+Evidencias:
+
+- `EmployeeManager` recibe el calculador por constructor (inyeccion de dependencia) en [js/services/EmployeeManager.js](js/services/EmployeeManager.js).
+- `DashboardApp` orquesta servicios en lugar de implementar internamente toda la logica en [js/dashboard-app.js](js/dashboard-app.js).
+
+Oportunidad de mejora:
+
+- Parte del frontend sigue acoplado a variables globales de `window` y `localStorage` en [js/dashboard-app.js](js/dashboard-app.js), [js/services/router.js](js/services/router.js) y [js/services/AuthService.js](js/services/AuthService.js). Para mayor DIP se recomienda inyectar adaptadores (storage, router y notificaciones).
+
+### Resumen ejecutivo
+
+- Nivel general de adopcion SOLID: Bueno.
+- Principios con mayor madurez: SRP y LSP.
+- Principios a fortalecer: ISP y DIP en backend y en acoplamientos globales del frontend.
+- Prioridad sugerida: extraer validaciones/auditoria a servicios y reducir dependencias globales de `window`.
+
+## Documentacion adicional
+
+- GUIA_ARQUITECTURA.md
+- REFACTORING_CHANGELOG.md

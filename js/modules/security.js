@@ -1,8 +1,15 @@
 /**
- * Security Module - Password change, role management, backups
+ * Módulo: Seguridad
+ *
+ * Gestiona cambio de contraseña, roles y acciones de backup.
  */
 
 const security = (() => {
+    /**
+     * Renderiza el panel de seguridad
+     * @param {HTMLElement} container - Contenedor destino
+     * @param {string} section - Sección solicitada
+     */
     const render = async (container, section) => {
         try {
             await renderSecurityPanel(container);
@@ -282,5 +289,5 @@ const security = (() => {
     };
 })();
 
-// Expose globally
+// Exponer globalmente
 window.security = security;

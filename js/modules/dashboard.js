@@ -1,8 +1,15 @@
 /**
- * Dashboard Module - Overview and quick stats
+ * Módulo: Dashboard
+ *
+ * Renderiza el resumen general con estadísticas rápidas.
  */
 
 const dashboard = (() => {
+    /**
+     * Renderiza el panel principal del dashboard
+     * @param {HTMLElement} container - Contenedor destino
+     * @param {string} section - Sección solicitada (no usada aquí)
+     */
     const render = async (container, section) => {
         try {
             let employees = await APIService.getEmployees();
@@ -118,10 +125,10 @@ const dashboard = (() => {
     };
 
     const renderCharts = (employees) => {
-        // Employee Type Distribution
+        // Distribucion por tipo de empleado
         renderEmployeeTypeChart(employees);
 
-        // Salary Distribution
+        // Distribucion salarial
         renderSalaryDistributionChart(employees);
     };
 
@@ -167,7 +174,7 @@ const dashboard = (() => {
         const ctx = document.getElementById('salaryDistributionChart');
         if (!ctx) return;
 
-        // Salaries grouped in ranges
+        // Salarios agrupados por rangos
         const ranges = {
             '0-500k': 0,
             '500k-1M': 0,

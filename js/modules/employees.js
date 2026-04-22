@@ -1,8 +1,15 @@
 /**
- * Employees Module - Register and List
+ * Módulo: Empleados
+ *
+ * Gestiona el registro y el listado de empleados.
  */
 
 const employees = (() => {
+    /**
+     * Renderiza la vista solicitada del módulo de empleados
+     * @param {HTMLElement} container - Contenedor destino
+     * @param {string} section - Sección a renderizar
+     */
     const render = async (container, section) => {
         try {
             if (section === 'register') {
@@ -121,7 +128,7 @@ const employees = (() => {
             </div>
         `;
 
-        // Setup form handling
+        // Configurar manejo del formulario
         setupRegisterFormHandlers();
     };
 
@@ -147,7 +154,7 @@ const employees = (() => {
             showOnlyTypeFields(e.target.value);
         });
 
-        // Estado inicial (por si hay valores persistidos/autocomplete)
+        // Estado inicial (por si hay valores persistidos/autocompletado)
         showOnlyTypeFields(employmentType.value);
 
         form.addEventListener('submit', async (e) => {
@@ -652,5 +659,5 @@ const employees = (() => {
     };
 })();
 
-// Expose globally
+// Exponer globalmente
 window.employees = employees;

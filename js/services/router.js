@@ -1,6 +1,8 @@
 /**
- * Simple SPA Router - without framework
- * Gestiona navegación sin recargar la página
+ * Router SPA (sin framework)
+ *
+ * Centraliza la navegación por hash, carga módulos y mantiene
+ * el estado del menú y del título de la vista.
  */
 
 const Router = (() => {
@@ -17,6 +19,12 @@ const Router = (() => {
 
     const moduleCache = {};
 
+    /**
+     * Carga un módulo desde el objeto global `window`
+     * @private
+     * @param {string} moduleName - Nombre del módulo
+     * @returns {Promise<Object>} Módulo cargado
+     */
     const loadModule = async (moduleName) => {
         if (typeof window[moduleName] === 'undefined') {
             throw new Error(`Módulo ${moduleName} no cargado`);
@@ -24,6 +32,10 @@ const Router = (() => {
         return window[moduleName];
     };
 
+    /**
+     * Navega a una ruta lógica y renderiza el módulo asociado
+     * @param {string} routeKey - Ruta (ej: "employees/list")
+     */
     const navigateTo = async (routeKey) => {
         try {
             let resolvedRouteKey = routeKey;
@@ -74,6 +86,11 @@ const Router = (() => {
         }
     };
 
+    /**
+     * Actualiza el título visible de la página
+     * @private
+     * @param {string} routeKey - Ruta actual
+     */
     const updatePageTitle = (routeKey) => {
         const titles = {
             'dashboard': 'Home',
@@ -92,6 +109,11 @@ const Router = (() => {
         }
     };
 
+    /**
+     * Marca el item de menú activo según la ruta
+     * @private
+     * @param {string} routeKey - Ruta actual
+     */
     const updateActiveMenuItem = (routeKey) => {
         document.querySelectorAll('.menu-item').forEach(item => {
             item.classList.remove('active');
@@ -105,17 +127,24 @@ const Router = (() => {
         }
     };
 
+    /**
+     * Maneja el cambio del hash de la URL
+     * @private
+     */
     const handleHashChange = () => {
         let hash = window.location.hash.slice(1);
         if (!hash) hash = 'dashboard';
         navigateTo(hash);
     };
 
+    /**
+     * Inicializa listeners y carga la ruta inicial
+     */
     const init = () => {
         // Escuchar cambios en hash
         window.addEventListener('hashchange', handleHashChange);
 
-        // Setup menu items
+        // Configurar los elementos del menu
         document.querySelectorAll('.menu-item').forEach(item => {
             item.addEventListener('click', (e) => {
                 const module = item.dataset.module;
@@ -129,6 +158,11 @@ const Router = (() => {
         handleHashChange();
     };
 
+    /**
+     * Renderiza un mensaje de error en el contenedor principal
+     * @private
+     * @param {string} message - Mensaje a mostrar
+     */
     const showErrorMessage = (message) => {
         const container = document.getElementById('moduleContainer');
         if (container) {
@@ -149,5 +183,5 @@ const Router = (() => {
     };
 })();
 
-// Expose globally
+// Exponer globalmente
 window.Router = Router;

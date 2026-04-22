@@ -1,8 +1,15 @@
 /**
- * Periods Module - Period locking and audit log
+ * Módulo: Períodos
+ *
+ * Administra períodos de nómina y consulta el registro de auditoría.
  */
 
 const periods = (() => {
+    /**
+     * Renderiza la pantalla de períodos
+     * @param {HTMLElement} container - Contenedor destino
+     * @param {string} section - Sección solicitada
+     */
     const render = async (container, section) => {
         try {
             await renderPeriodsManagement(container);
@@ -277,5 +284,5 @@ const periods = (() => {
     };
 })();
 
-// Expose globally
+// Exponer globalmente
 window.periods = periods;

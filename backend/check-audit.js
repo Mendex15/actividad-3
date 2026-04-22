@@ -1,3 +1,9 @@
+/**
+ * SCRIPT: Verificar tabla audit_log
+ *
+ * Muestra estructura y ultimos registros de auditoria.
+ */
+
 const mysql = require("mysql2/promise");
 
 (async () => {

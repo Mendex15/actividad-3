@@ -1,3 +1,10 @@
+/**
+ * SCRIPT: Agregar columnas faltantes
+ *
+ * Agrega las columnas email y phone a la tabla employees
+ * si no existen.
+ */
+
 const mysql = require("mysql2/promise");
 
 (async () => {

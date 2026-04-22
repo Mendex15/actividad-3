@@ -1,3 +1,9 @@
+/**
+ * SCRIPT: Verificar estructura y datos de empleados
+ *
+ * Consulta columnas de employees y un ejemplo de registro.
+ */
+
 const mysql = require("mysql2/promise");
 
 (async () => {

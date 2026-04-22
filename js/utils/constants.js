@@ -1,5 +1,7 @@
 /**
- * Constants - Configuraciones y definiciones globales
+ * Constantes globales del sistema
+ *
+ * Roles, permisos, menús y configuraciones base.
  */
 
 const Constants = {
@@ -10,7 +12,7 @@ const Constants = {
         EMPLOYEE: 'Employee'
     },
 
-    // Role Permissions Matrix
+    // Matriz de permisos por rol
     PERMISSIONS: {
         'Admin': {
             canRegisterEmployee: true,
@@ -50,7 +52,7 @@ const Constants = {
         }
     },
 
-    // Employee Types
+    // Tipos de empleado
     EMPLOYEE_TYPES: {
         SALARIED: 'Salaried',
         HOURLY: 'Hourly',
@@ -58,7 +60,7 @@ const Constants = {
         TEMPORARY: 'Temporary'
     },
 
-    // Menu Configuration
+    // Configuracion del menu
     MENU_ITEMS: [
         { label: 'Dashboard', icon: '📊', module: 'dashboard', section: 'dashboard' },
         { label: 'Registrar Empleado', icon: '➕', module: 'employees', section: 'register' },
@@ -70,25 +72,25 @@ const Constants = {
         { label: 'Reportes', icon: '📈', module: 'reports', section: 'reports' }
     ],
 
-    // Salary Deductions
+    // Deducciones salariales
     DEDUCTIONS: {
         healthInsurance: 0.04,      // 4%
         pensionFund: 0.03,          // 3%
         taxRate: 0.05               // 5%
     },
 
-    // Bonuses and Benefits
+    // Bonos y beneficios
     BENEFITS: {
         loyaltyBonus: 0.10,         // 10% for salaried >5 years
         commissionBonus: 0.03,      // 3% for commission employees
         mealVoucher: 1000000        // $1M for some employees
     },
 
-    // Date Formats
+    // Formatos de fecha
     DATE_FORMAT: 'YYYY-MM-DD',
     DISPLAY_DATE_FORMAT: 'DD/MM/YYYY',
 
-    // API Messages
+    // Mensajes de API
     API_MESSAGES: {
         success: 'Operación completada exitosamente',
         error: 'Ocurrió un error en la operación',
@@ -97,5 +99,5 @@ const Constants = {
     }
 };
 
-// Expose globally
+// Exponer globalmente
 window.Constants = Constants;

@@ -1,8 +1,15 @@
 /**
- * Reports Module - Charts and reports
+ * Módulo: Reportes
+ *
+ * Renderiza reportes y gráficos con datos de empleados y nómina.
  */
 
 const reports = (() => {
+    /**
+     * Renderiza el panel de reportes
+     * @param {HTMLElement} container - Contenedor destino
+     * @param {string} section - Sección solicitada
+     */
     const render = async (container, section) => {
         try {
             await renderReportsPanel(container);
@@ -67,14 +74,14 @@ const reports = (() => {
     const renderSalariesReport = (container, employees) => {
         if (!employees || employees.length === 0) return;
 
-        // Calculate salary statistics
+        // Calcular estadisticas de salarios
         const salaries = employees.map(e => parseFloat(e.monthly_salary) || 0);
         const totalSalary = salaries.reduce((a, b) => a + b, 0);
         const avgSalary = totalSalary / salaries.length;
         const minSalary = Math.min(...salaries);
         const maxSalary = Math.max(...salaries);
 
-        // Salary ranges
+        // Rangos salariales
         const ranges = {
             '0-500k': salaries.filter(s => s < 500000).length,
             '500k-1M': salaries.filter(s => s >= 500000 && s < 1000000).length,
@@ -116,7 +123,7 @@ const reports = (() => {
         const canvas = document.getElementById('reportChart');
         if (!canvas) return;
 
-        // Destroy existing chart if any
+        // Destruir grafico anterior si existe
         if (window.reportChart && typeof window.reportChart.destroy === 'function') {
             window.reportChart.destroy();
         } else if (window.reportChart) {
@@ -265,7 +272,7 @@ const reports = (() => {
             return;
         }
 
-        // Calculate salary ranges for payroll
+        // Calcular rangos salariales para la nomina
         const salaries = employees.map(e => parseFloat(e.monthly_salary) || 0);
         const ranges = {
             '0-500k': salaries.filter(s => s < 500000).length,
@@ -355,5 +362,5 @@ const reports = (() => {
     };
 })();
 
-// Expose globally
+// Exponer globalmente
 window.reports = reports;

@@ -1,9 +1,11 @@
 /**
- * Helper Functions - Utilidades comunes
+ * Utilidades comunes del frontend
+ *
+ * Funciones para fechas, moneda, strings, arrays y DOM.
  */
 
 const Helpers = {
-    // Date Formatting
+    // Formateo de fechas
     formatDate(date, format = 'DD/MM/YYYY') {
         if (typeof date === 'string') {
             date = new Date(date);
@@ -41,7 +43,7 @@ const Helpers = {
         };
     },
 
-    // Currency Formatting
+    // Formateo de moneda
     formatCurrency(amount) {
         return new Intl.NumberFormat('es-CO', {
             style: 'currency',
@@ -58,17 +60,17 @@ const Helpers = {
         return parseFloat(value) || 0;
     },
 
-    // Percentage Formatting
+    // Formateo de porcentajes
     formatPercentage(value) {
         return `${(parseFloat(value) * 100).toFixed(2)}%`;
     },
 
-    // Number Formatting
+    // Formateo de numeros
     formatNumber(num, decimals = 2) {
         return parseFloat(num).toFixed(decimals);
     },
 
-    // String Utilities
+    // Utilidades de cadenas
     capitalize(str) {
         if (!str) return '';
         return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
@@ -84,7 +86,7 @@ const Helpers = {
         });
     },
 
-    // Array Utilities
+    // Utilidades de arreglos
     sortBy(array, key, order = 'asc') {
         return [...array].sort((a, b) => {
             const aVal = a[key];
@@ -113,7 +115,7 @@ const Helpers = {
         }, {});
     },
 
-    // Object Utilities
+    // Utilidades de objetos
     cloneObject(obj) {
         return JSON.parse(JSON.stringify(obj));
     },
@@ -130,7 +132,7 @@ const Helpers = {
         return result;
     },
 
-    // Validation Utilities
+    // Utilidades de validacion
     isValidEmail(email) {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return re.test(email);
@@ -145,7 +147,7 @@ const Helpers = {
         return !isNaN(parseFloat(value)) && value >= 0;
     },
 
-    // DOM Utilities
+    // Utilidades de DOM
     createElement(tag, classes = '', attributes = {}) {
         const el = document.createElement(tag);
         if (classes) el.className = classes;
@@ -179,7 +181,7 @@ const Helpers = {
         return element;
     },
 
-    // Local Storage
+    // Almacenamiento local
     saveToStorage(key, value) {
         try {
             localStorage.setItem(key, JSON.stringify(value));
@@ -210,7 +212,7 @@ const Helpers = {
         }
     },
 
-    // Notifications
+    // Notificaciones
     showNotification(message, type = 'success', duration = 3000) {
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;
@@ -262,7 +264,7 @@ const Helpers = {
     }
 };
 
-// Expose globally
+// Exponer globalmente
 window.Helpers = Helpers;
 
 // Agregar estilos de animación al documento

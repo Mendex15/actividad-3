@@ -1,4 +1,8 @@
 <!DOCTYPE html>
+<!--
+    Vista principal del dashboard.
+    Contiene el layout de login, sidebar y contenedor de modulos.
+-->
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -10,7 +14,7 @@
     <link rel="stylesheet" href="styles-dashboard.css?v=1">
 </head>
 <body>
-    <!-- Login Screen -->
+    <!-- Pantalla de inicio de sesion -->
     <div id="loginScreen" class="login-screen">
         <div class="login-container">
             <div class="login-box">
@@ -41,9 +45,9 @@
         </div>
     </div>
 
-    <!-- Dashboard Layout -->
+    <!-- Estructura del dashboard -->
     <div id="dashboardScreen" class="dashboard-layout" style="display: none;">
-        <!-- Sidebar -->
+        <!-- Barra lateral -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <h2>Sistema Nómina</h2>
@@ -109,7 +113,7 @@
             </div>
         </aside>
 
-        <!-- Main Content -->
+        <!-- Contenido principal -->
         <main class="main-content">
             <div class="header">
                 <div class="header-content">
@@ -120,7 +124,7 @@
 
             <div class="content-container">
                 <div id="moduleContainer" class="module-container">
-                    <!-- Los módulos se cargan dinámicamente aquí -->
+                    <!-- Los modulos se cargan dinamicamente aqui -->
                 </div>
             </div>
         </main>
@@ -130,34 +134,34 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
-    <!-- Utils (PRIMERO - sin dependencias) -->
+    <!-- Utilidades (PRIMERO - sin dependencias) -->
     <script src="js/utils/constants.js?v=2"></script>
     <script src="js/utils/helpers.js?v=2"></script>
     <script src="js/utils/Validators.js?v=13"></script>
     
-    <!-- Core Services (SEGUNDO - base de la aplicación) -->
+    <!-- Servicios base (SEGUNDO - base de la aplicacion) -->
     <script src="js/services/api.js?v=5"></script>
     
-    <!-- New Services (TERCERO - dependen de APIService) -->
+    <!-- Servicios nuevos (TERCERO - dependen de APIService) -->
     <script src="js/services/AuthService.js?v=1"></script>
     <script src="js/services/UIStateManager.js?v=1"></script>
     <script src="js/services/MenuController.js?v=1"></script>
     <script src="js/services/router.js?v=3"></script>
     
-    <!-- Models -->
+    <!-- Modelos -->
     <script src="js/models/Employee.js?v=13"></script>
     <script src="js/models/SalariedEmployee.js?v=13"></script>
     <script src="js/models/HourlyEmployee.js?v=13"></script>
     <script src="js/models/CommissionEmployee.js?v=13"></script>
     <script src="js/models/TemporaryEmployee.js?v=13"></script>
     
-    <!-- Legacy Services -->
+    <!-- Servicios heredados -->
     <script src="js/services/PayrollCalculator.js?v=13"></script>
     <script src="js/services/EmployeeManager.js?v=13"></script>
     <script src="js/services/ReportGenerator.js?v=13"></script>
     <script src="js/services/PayslipGenerator.js?v=13"></script>
     
-    <!-- Modules -->
+    <!-- Modulos -->
     <script src="js/modules/dashboard.js?v=4"></script>
     <script src="js/modules/employees.js?v=5"></script>
     <script src="js/modules/payroll.js?v=5"></script>
@@ -165,7 +169,7 @@
     <script src="js/modules/security.js?v=3"></script>
     <script src="js/modules/reports.js?v=5"></script>
 
-    <!-- Main App (ÚLTIMO - cuando todas las dependencias están disponibles) -->
+    <!-- App principal (ULTIMO - cuando todas las dependencias estan disponibles) -->
     <script src="js/dashboard-app.js?v=2"></script>
 </body>
 </html>

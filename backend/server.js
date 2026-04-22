@@ -73,7 +73,7 @@ app.use('/api/payroll', payrollRoutes);
 app.use('/api/audit', auditRoutes);
 
 /**
- * Health Check
+ * Verificacion de salud
  */
 app.get('/health', (req, res) => {
     res.json({

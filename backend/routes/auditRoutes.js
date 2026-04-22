@@ -1,3 +1,9 @@
+/**
+ * RUTAS: Auditoría
+ *
+ * Endpoints para consultar el registro de auditoría.
+ */
+
 const express = require('express');
 const router = express.Router();
 const { verifyToken } = require('../middleware/auth');

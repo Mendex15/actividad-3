@@ -1,8 +1,15 @@
 /**
- * Payroll Module - Summary and History
+ * Módulo: Nómina
+ *
+ * Renderiza el resumen y el historial de nómina.
  */
 
 const payroll = (() => {
+    /**
+     * Renderiza la sección de nómina solicitada
+     * @param {HTMLElement} container - Contenedor destino
+     * @param {string} section - Sección a renderizar
+     */
     const render = async (container, section) => {
         try {
             if (section === 'summary') {
@@ -522,5 +529,5 @@ const payroll = (() => {
     };
 })();
 
-// Expose globally
+// Exponer globalmente
 window.payroll = payroll;
