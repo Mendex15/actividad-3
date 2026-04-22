@@ -7,7 +7,7 @@
 
 const APIService = (() => {
     // ====== CONFIGURACIÓN ======
-    const BASE_URL = 'http://localhost:3001/api';
+    const BASE_URL = 'https://actividad-3-4mrx.onrender.com/api';
     const TOKEN_STORAGE_KEY = 'token';
     const REQUEST_TIMEOUT = 30000; // 30 segundos
     const HTTP_STATUS = {
