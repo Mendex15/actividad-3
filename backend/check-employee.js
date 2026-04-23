@@ -9,11 +9,12 @@ const mysql = require("mysql2/promise");
 (async () => {
   try {
     const conn = await mysql.createConnection({
-      host: "localhost",
-      user: "root",
-      password: "1234",
-      database: "nomina_db"
-    });
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
+    port: process.env.DB_PORT
+});
 
     const [cols] = await conn.execute("DESCRIBE employees");
     console.log("📋 Columnas de tabla employees:");
