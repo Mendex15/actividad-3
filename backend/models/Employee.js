@@ -157,7 +157,17 @@ class Employee {
                 'SELECT * FROM company_settings WHERE user_id = ?',
                 [userId]
             );
-            const config = settings[0];
+            const config = settings[0] || {};
+            const payrollConfig = {
+                pension_rate: 0.04,
+                arl_rate: 0.02,
+                food_allowance: 1000000,
+                seniority_bonus_rate: 0.10,
+                seniority_years_threshold: 5,
+                commission_bonus_threshold: 20000000,
+                commission_bonus_rate: 0.03,
+                ...config
+            };
 
             // Calcular según tipo de empleado
             switch (employee.employee_type) {
@@ -165,12 +175,12 @@ class Employee {
                     grossSalary = parseFloat(employee.monthly_salary) || 0;
                     
                     // Bono por antigüedad: 10% si > 5 años
-                    if (employee.years_in_company > config.seniority_years_threshold) {
-                        bonuses = grossSalary * config.seniority_bonus_rate;
+                    if (employee.years_in_company > payrollConfig.seniority_years_threshold) {
+                        bonuses = grossSalary * payrollConfig.seniority_bonus_rate;
                     }
                     
                     // Bono alimentación
-                    benefits = parseFloat(config.food_allowance) || 0;
+                    benefits = parseFloat(payrollConfig.food_allowance) || 0;
                     break;
 
                 case 'horas':
@@ -195,12 +205,12 @@ class Employee {
                     grossSalary = baseSal + commission;
                     
                     // Bono adicional: 3% si ventas > $20M
-                    if (sales > parseFloat(config.commission_bonus_threshold)) {
-                        bonuses = sales * parseFloat(config.commission_bonus_rate);
+                    if (sales > parseFloat(payrollConfig.commission_bonus_threshold)) {
+                        bonuses = sales * parseFloat(payrollConfig.commission_bonus_rate);
                     }
                     
                     // Bono alimentación
-                    benefits = parseFloat(config.food_allowance) || 0;
+                    benefits = parseFloat(payrollConfig.food_allowance) || 0;
                     break;
 
                 case 'temporal':
@@ -211,7 +221,7 @@ class Employee {
             }
 
             // Deducciones obligatorias (4% seguro social)
-            const mandatoryDeductions = grossSalary * parseFloat(config.pension_rate);
+            const mandatoryDeductions = grossSalary * parseFloat(payrollConfig.pension_rate);
 
             // Total
             const totalIncome = grossSalary + bonuses + benefits;
