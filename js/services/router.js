@@ -178,6 +178,7 @@ const Router = (() => {
 
     return {
         init,
+        navigate: navigateTo,
         navigateTo,
         getCurrentRoute: () => window.location.hash.slice(1) || 'dashboard'
     };

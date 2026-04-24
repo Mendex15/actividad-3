@@ -307,11 +307,6 @@ const DashboardApp = (() => {
 /**
  * Inicializar cuando el DOM esté listo
  */
-document.addEventListener('DOMContentLoaded', () => {
-    DashboardApp.init();
-});
-
-// Initialize app when DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
         DashboardApp.init();
