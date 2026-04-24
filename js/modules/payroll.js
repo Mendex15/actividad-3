@@ -36,7 +36,7 @@ const payroll = (() => {
                 }
             } catch (error) {
                 // Si no hay nóminas para el período, mostrar opción de generar
-                if (error.message && error.message.includes('No se encontraron')) {
+                if (error.message && (error.message.includes('No se encontraron') || error.message.includes('Recurso no encontrado'))) {
                     payroll = [];
                 } else {
                     throw error;
@@ -300,8 +300,15 @@ const payroll = (() => {
                         historyContainer.innerHTML = `<p class="empty-message">Selecciona un mes para ver el historial</p>`;
                         return;
                     }
-                    const response = await APIService.getPayrollByPeriod(period.month, period.year);
-                    const payrolls = response.payrolls || response || [];
+                    let payrolls = [];
+                    try {
+                        const response = await APIService.getPayrollByPeriod(period.month, period.year);
+                        payrolls = response.payrolls || response || [];
+                    } catch (error) {
+                        if (!(error.message && (error.message.includes('No se encontraron') || error.message.includes('Recurso no encontrado')))) {
+                            throw error;
+                        }
+                    }
                     renderRows(payrolls, {
                         title: `Nóminas del período ${period.month}/${period.year}`,
                         showPeriodCol: false
@@ -311,8 +318,15 @@ const payroll = (() => {
 
                 // Caso 2: Empleado seleccionado + mes seleccionado => nómina específica
                 if (employeeId && period) {
-                    const resp = await APIService.getEmployeePayrollByPeriod(employeeId, period.month, period.year);
-                    const payroll = resp && resp.payroll ? [resp.payroll] : [];
+                    let payroll = [];
+                    try {
+                        const resp = await APIService.getEmployeePayrollByPeriod(employeeId, period.month, period.year);
+                        payroll = resp && resp.payroll ? [resp.payroll] : [];
+                    } catch (error) {
+                        if (!(error.message && (error.message.includes('No se encontraron') || error.message.includes('Recurso no encontrado')))) {
+                            throw error;
+                        }
+                    }
                     renderRows(payroll, {
                         title: `Nómina de ${selectedEmployee ? selectedEmployee.name : 'empleado'} - ${period.month}/${period.year}`,
                         showPeriodCol: false

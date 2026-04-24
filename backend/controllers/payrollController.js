@@ -22,15 +22,16 @@ exports.getByPeriod = async (req, res) => {
         }
 
         const payrolls = await PayrollHistory.findByPeriod(req.user.id, month, year);
-
-        if (payrolls.length === 0) {
-            return res.status(404).json({
-                success: false,
-                message: 'No se encontraron nóminas para este período'
-            });
-        }
-
-        const summary = await PayrollHistory.getSummaryByPeriod(req.user.id, month, year);
+        const summary = payrolls.length === 0
+            ? {
+                total_employees: 0,
+                total_gross: 0,
+                total_bonuses: 0,
+                total_benefits: 0,
+                total_deductions: 0,
+                total_net: 0
+            }
+            : await PayrollHistory.getSummaryByPeriod(req.user.id, month, year);
 
         res.json({
             success: true,
