@@ -562,15 +562,29 @@ const employees = (() => {
                         throw new Error('No fue posible calcular la nómina actual');
                     }
 
-                    const savedRows = [{
-                        ...savedPayroll,
+                    const savedPeriod = {
                         month: calcResp?.period?.month || Helpers.getCurrentMonth().month,
                         year: calcResp?.period?.year || Helpers.getCurrentMonth().year
-                    }];
+                    };
+
+                    let refreshedHistory = [];
+                    try {
+                        const refreshedPayrollData = await APIService.getEmployeePayrollHistory(employee.id, 24);
+                        refreshedHistory = refreshedPayrollData.history || [];
+                    } catch (refreshError) {
+                        console.warn('No se pudo refrescar el historial guardado:', refreshError);
+                    }
+
+                    const savedRows = refreshedHistory.length > 0
+                        ? refreshedHistory
+                        : [{
+                            ...savedPayroll,
+                            ...savedPeriod
+                        }];
 
                     contentDiv.innerHTML = `
                         <p style="margin-bottom: 12px; color: #27ae60; font-weight: 600;">
-                            No había histórico. La nómina actual se calculó y guardó automáticamente.
+                            La nómina actual se calculó y guardó automáticamente.
                         </p>
                         <table class="payroll-table" style="width: 100%; border-collapse: collapse;">
                             <thead>
