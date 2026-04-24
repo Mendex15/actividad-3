@@ -554,9 +554,61 @@ const employees = (() => {
             const history = payrollData.history || [];
 
             if (history.length === 0) {
-                contentDiv.innerHTML = '<p class="empty-message">No hay nóminas registradas para este empleado</p>';
-                downloadBtn.disabled = true;
-                return;
+                try {
+                    const calcResp = await APIService.calculatePayroll(employee.id);
+                    const previewPayroll = calcResp?.payroll;
+
+                    if (!previewPayroll) {
+                        throw new Error('No fue posible calcular la nómina actual');
+                    }
+
+                    const currentPeriod = Helpers.getCurrentMonth();
+                    const previewRows = [{
+                        month: currentPeriod.month,
+                        year: currentPeriod.year,
+                        ...previewPayroll
+                    }];
+
+                    contentDiv.innerHTML = `
+                        <p style="margin-bottom: 12px; color: #f39c12; font-weight: 600;">
+                            No hay histórico guardado. Se muestra una previsualización del cálculo actual.
+                        </p>
+                        <table class="payroll-table" style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr>
+                                    <th>Período</th>
+                                    <th>Salario Base</th>
+                                    <th>Bonos</th>
+                                    <th>Deducciones</th>
+                                    <th>Beneficios</th>
+                                    <th>Neto</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${previewRows.map(h => `
+                                    <tr>
+                                        <td>${h.month}/${h.year}</td>
+                                        <td>${Helpers.formatCurrency(h.gross_salary)}</td>
+                                        <td>${Helpers.formatCurrency(h.bonuses || 0)}</td>
+                                        <td>${Helpers.formatCurrency(h.mandatory_deductions || 0)}</td>
+                                        <td>${Helpers.formatCurrency(h.benefits || 0)}</td>
+                                        <td><strong>${Helpers.formatCurrency(h.net_salary)}</strong></td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+
+                    downloadBtn.disabled = false;
+                    downloadBtn.addEventListener('click', () => {
+                        downloadPayslipHTML(employee, previewRows);
+                    });
+                    return;
+                } catch (calcError) {
+                    contentDiv.innerHTML = '<p class="empty-message">No hay nóminas registradas para este empleado</p>';
+                    downloadBtn.disabled = true;
+                    return;
+                }
             }
 
             contentDiv.innerHTML = `
