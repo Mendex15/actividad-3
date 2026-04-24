@@ -2,7 +2,7 @@
  * SERVICIO: EmployeeManager
  * 
  * Principios SOLID aplicados:
- * - Single Responsibility: Solo gestiona empleados (crear, leer, actualizar, eliminar)
+ *  Solo gestiona empleados (crear, leer, actualizar, eliminar)
  * - Dependency Inversion: Usa PayrollCalculator como dependencia
  * 
  * Este servicio gestiona la colección de empleados del sistema.
