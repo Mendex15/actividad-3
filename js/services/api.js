@@ -291,6 +291,16 @@ const APIService = (() => {
     };
 
     /**
+     * Obtiene las nóminas más recientes del usuario
+     * @async
+     * @param {number} limit - Cantidad máxima de registros
+     * @returns {Promise<Object>} Nóminas recientes
+     */
+    const getRecentPayrolls = async (limit = 12) => {
+        return makeRequest(`/payroll/recent?limit=${limit}`);
+    };
+
+    /**
      * Obtiene historial de nómina de un empleado
      * @async
      * @param {number} employeeId - ID del empleado
@@ -374,6 +384,7 @@ const APIService = (() => {
         // Nómina
         calculatePayroll,
         getPayrollByPeriod,
+        getRecentPayrolls,
         getEmployeePayrollHistory,
         getEmployeePayrollByPeriod,
 

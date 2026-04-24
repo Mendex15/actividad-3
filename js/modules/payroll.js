@@ -309,6 +309,17 @@ const payroll = (() => {
                             throw error;
                         }
                     }
+
+                    if (payrolls.length === 0) {
+                        const recent = await APIService.getRecentPayrolls(12);
+                        const recentRows = recent.payrolls || recent || [];
+                        renderRows(recentRows, {
+                            title: 'Nóminas más recientes',
+                            showPeriodCol: true
+                        });
+                        return;
+                    }
+
                     renderRows(payrolls, {
                         title: `Nóminas del período ${period.month}/${period.year}`,
                         showPeriodCol: false

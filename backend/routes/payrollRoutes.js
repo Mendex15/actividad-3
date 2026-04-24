@@ -13,6 +13,7 @@ router.use(verifyToken);
 // Consultas generales
 router.get('/by-period', payrollController.getByPeriod);
 router.get('/summary', payrollController.getSummary);
+router.get('/recent', payrollController.getRecent);
 router.get('/compare', payrollController.comparePeriods);
 router.get('/pending', payrollController.getPending);
 

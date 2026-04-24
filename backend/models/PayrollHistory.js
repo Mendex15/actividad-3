@@ -98,6 +98,25 @@ class PayrollHistory {
     }
 
     /**
+     * Obtener las nóminas más recientes de un usuario
+     */
+    static async findRecentByUser(userId, limit = 12) {
+        try {
+            const sql = `
+                SELECT ph.*, e.name AS employee_name, e.employee_type
+                FROM payroll_history ph
+                INNER JOIN employees e ON ph.employee_id = e.id
+                WHERE e.user_id = ? AND e.is_active = TRUE
+                ORDER BY ph.year DESC, ph.month DESC, e.name ASC
+                LIMIT ?
+            `;
+            return await query(sql, [userId, limit]);
+        } catch (error) {
+            throw new Error(`Error obteniendo nóminas recientes: ${error.message}`);
+        }
+    }
+
+    /**
      * Obtener resumen de nómina mensual
      */
     static async getSummaryByPeriod(userId, month, year) {

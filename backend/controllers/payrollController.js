@@ -230,3 +230,24 @@ exports.getSummary = async (req, res) => {
         });
     }
 };
+
+/**
+ * Obtener nóminas más recientes del usuario
+ */
+exports.getRecent = async (req, res) => {
+    try {
+        const { limit } = req.query;
+        const payrolls = await PayrollHistory.findRecentByUser(req.user.id, limit || 12);
+
+        res.json({
+            success: true,
+            total: payrolls.length,
+            payrolls
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
