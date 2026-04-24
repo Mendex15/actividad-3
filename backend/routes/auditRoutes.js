@@ -27,23 +27,11 @@ router.get('/recent', async (req, res) => {
         });
     } catch (error) {
         console.error('Error fetching audit logs:', error);
-        const mysqlErrorCode = error?.code || error?.errno || '';
-        const missingAuditTable =
-            mysqlErrorCode === 'ER_NO_SUCH_TABLE' ||
-            String(error?.message || '').toLowerCase().includes('audit_log');
-
-        if (missingAuditTable) {
-            return res.json({
-                success: true,
-                logs: [],
-                count: 0
-            });
-        }
-
-        res.status(500).json({
-            success: false,
-            message: 'Error fetching audit logs',
-            error: error.message
+        return res.json({
+            success: true,
+            logs: [],
+            count: 0,
+            warning: 'Audit log unavailable'
         });
     }
 });
