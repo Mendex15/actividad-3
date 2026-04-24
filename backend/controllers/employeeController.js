@@ -279,7 +279,15 @@ exports.generatePayroll = async (req, res) => {
         // Obtener todos los empleados
         const employees = await Employee.findByUserId(req.user.id);
 
+        if (!employees || employees.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'No hay empleados activos para generar nómina'
+            });
+        }
+
         const payrolls = [];
+        const failedEmployees = [];
         for (const employee of employees) {
             try {
                 const payroll = await Employee.calculatePayroll(employee.id, req.user.id);
@@ -291,7 +299,23 @@ exports.generatePayroll = async (req, res) => {
                 });
             } catch (error) {
                 console.error(`Error calculando nómina para ${employee.name}:`, error);
+                failedEmployees.push({
+                    employee_id: employee.id,
+                    employee_name: employee.name,
+                    reason: error.message
+                });
             }
+        }
+
+        if (payrolls.length === 0) {
+            const firstReason = failedEmployees[0]?.reason;
+            return res.status(400).json({
+                success: false,
+                message: firstReason
+                    ? `No se pudo generar nómina para ningún empleado. Primera causa: ${firstReason}`
+                    : 'No se pudo generar nómina para ningún empleado. Revisa la configuración salarial de cada empleado.',
+                failedEmployees
+            });
         }
 
         // Obtener resumen
@@ -301,6 +325,7 @@ exports.generatePayroll = async (req, res) => {
             success: true,
             message: `Nómina de ${month}/${year} generada`,
             payrolls,
+            failedEmployees,
             summary
         });
     } catch (error) {
