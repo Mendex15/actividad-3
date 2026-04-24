@@ -8,8 +8,10 @@
 const Router = (() => {
     const routes = {
         'dashboard': { module: 'dashboard', section: 'dashboard' },
+        'employees': { module: 'employees', section: 'list' },
         'employees/register': { module: 'employees', section: 'register' },
         'employees/list': { module: 'employees', section: 'list' },
+        'payroll': { module: 'payroll', section: 'summary' },
         'payroll/summary': { module: 'payroll', section: 'summary' },
         'payroll/history': { module: 'payroll', section: 'history' },
         'periods': { module: 'periods', section: 'periods' },
@@ -84,6 +86,28 @@ const Router = (() => {
             console.error('Error navegando a ruta:', routeKey, error);
             showErrorMessage('Error cargando el módulo: ' + error.message);
         }
+    };
+
+    /**
+     * Compatibilidad con llamadas antiguas:
+     * - navigate('employees', 'list')
+     * - navigate('payroll/summary')
+     */
+    const navigate = async (moduleOrRoute, section) => {
+        const moduleText = String(moduleOrRoute || '').trim();
+        if (!moduleText) {
+            return navigateTo('dashboard');
+        }
+
+        if (moduleText.includes('/')) {
+            return navigateTo(moduleText);
+        }
+
+        if (section && String(section).trim()) {
+            return navigateTo(`${moduleText}/${String(section).trim()}`);
+        }
+
+        return navigateTo(moduleText);
     };
 
     /**
@@ -178,7 +202,7 @@ const Router = (() => {
 
     return {
         init,
-        navigate: navigateTo,
+        navigate,
         navigateTo,
         getCurrentRoute: () => window.location.hash.slice(1) || 'dashboard'
     };
