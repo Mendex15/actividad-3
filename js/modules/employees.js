@@ -556,22 +556,21 @@ const employees = (() => {
             if (history.length === 0) {
                 try {
                     const calcResp = await APIService.calculatePayroll(employee.id);
-                    const previewPayroll = calcResp?.payroll;
+                    const savedPayroll = calcResp?.payroll;
 
-                    if (!previewPayroll) {
+                    if (!savedPayroll) {
                         throw new Error('No fue posible calcular la nómina actual');
                     }
 
-                    const currentPeriod = Helpers.getCurrentMonth();
-                    const previewRows = [{
-                        month: currentPeriod.month,
-                        year: currentPeriod.year,
-                        ...previewPayroll
+                    const savedRows = [{
+                        ...savedPayroll,
+                        month: calcResp?.period?.month || Helpers.getCurrentMonth().month,
+                        year: calcResp?.period?.year || Helpers.getCurrentMonth().year
                     }];
 
                     contentDiv.innerHTML = `
-                        <p style="margin-bottom: 12px; color: #f39c12; font-weight: 600;">
-                            No hay histórico guardado. Se muestra una previsualización del cálculo actual.
+                        <p style="margin-bottom: 12px; color: #27ae60; font-weight: 600;">
+                            No había histórico. La nómina actual se calculó y guardó automáticamente.
                         </p>
                         <table class="payroll-table" style="width: 100%; border-collapse: collapse;">
                             <thead>
@@ -585,7 +584,7 @@ const employees = (() => {
                                 </tr>
                             </thead>
                             <tbody>
-                                ${previewRows.map(h => `
+                                ${savedRows.map(h => `
                                     <tr>
                                         <td>${h.month}/${h.year}</td>
                                         <td>${Helpers.formatCurrency(h.gross_salary)}</td>
@@ -601,7 +600,7 @@ const employees = (() => {
 
                     downloadBtn.disabled = false;
                     downloadBtn.addEventListener('click', () => {
-                        downloadPayslipHTML(employee, previewRows);
+                        downloadPayslipHTML(employee, savedRows);
                     });
                     return;
                 } catch (calcError) {

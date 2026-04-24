@@ -250,9 +250,16 @@ exports.calculatePayroll = async (req, res) => {
         const { id } = req.params;
         const payroll = await Employee.calculatePayroll(id, req.user.id);
 
+        const currentDate = new Date();
+        const month = currentDate.getMonth() + 1;
+        const year = currentDate.getFullYear();
+        const savedPayroll = await PayrollHistory.create(id, month, year, payroll);
+
         res.json({
             success: true,
-            payroll
+            saved: true,
+            period: { month, year },
+            payroll: savedPayroll || payroll
         });
     } catch (error) {
         res.status(400).json({
