@@ -38,6 +38,13 @@ const employees = (() => {
                             <input type="text" name="last_name" required>
                         </div>
                     </div>
+                    
+                    <div class="form-row">
+                      <div class="form-group">
+                            <label>CI *</label>
+                            <input type="text" name="ci" required>
+                         </div>
+                    </div>
 
                     <div class="form-row">
                         <div class="form-group">
@@ -157,9 +164,10 @@ const employees = (() => {
         // Estado inicial (por si hay valores persistidos/autocompletado)
         showOnlyTypeFields(employmentType.value);
 
+        // Submit handler del formulario
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const formData = new FormData(form);
             const raw = Object.fromEntries(formData);
 
@@ -167,13 +175,16 @@ const employees = (() => {
             const lastName = String(raw.last_name || '').trim();
             const employeeType = String(raw.employee_type || '').trim();
 
-            // Validaciones mínimas (alineadas al backend)
-            if (!firstName || !employeeType) {
-                Helpers.showNotification('Nombre y tipo de empleado requeridos', 'error');
+            if (!firstName || !lastName || !employeeType) {
+                Helpers.showNotification('Nombre, apellido y tipo de empleado son requeridos', 'error');
                 return;
             }
 
-            // Validate email (solo UX; el backend no lo guarda hoy)
+            if (!raw.ci) {
+                Helpers.showNotification('CI es obligatorio', 'error');
+                return;
+            }
+
             if (raw.email && !Helpers.isValidEmail(raw.email)) {
                 Helpers.showNotification('Email inválido', 'error');
                 return;
@@ -181,11 +192,13 @@ const employees = (() => {
 
             const payload = {
                 name: `${firstName} ${lastName}`.trim(),
+                ci: raw.ci,
+                email: raw.email || null,
+                phone: raw.phone || null,
                 employee_type: employeeType,
                 years_in_company: raw.years_in_company ? Number(raw.years_in_company) : 0
             };
 
-            // Campos por tipo
             if (employeeType === 'asalariado' || employeeType === 'temporal') {
                 if (raw.monthly_salary === '' || raw.monthly_salary === undefined) {
                     Helpers.showNotification('Salario mensual requerido', 'error');
@@ -219,12 +232,12 @@ const employees = (() => {
                 Helpers.showNotification('Empleado registrado exitosamente', 'success');
                 form.reset();
                 showOnlyTypeFields('');
-
             } catch (error) {
                 Helpers.showNotification(error.message, 'error');
             }
         });
     };
+    
 
     const renderEmployeesList = async (container) => {
         try {

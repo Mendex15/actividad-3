@@ -68,6 +68,32 @@ Inicia el servidor:
 npm start
 ```
 
+### Configuracion de produccion
+
+Si el frontend esta desplegado en Vercel y el backend en Render o Railway, configura la URL de la API antes de cargar los scripts.
+
+Opcion recomendada en `index.html`:
+
+```html
+<script>
+    window.__API_BASE_URL__ = 'https://tu-backend.en.render.o.railway/api';
+</script>
+```
+
+Tambien puedes guardar el valor en el navegador para pruebas locales:
+
+```javascript
+localStorage.setItem('API_BASE_URL', 'https://tu-backend.en.render.o.railway/api');
+```
+
+El proyecto usa esta prioridad para resolver la API:
+
+1. `window.__API_BASE_URL__`
+2. `localStorage.API_BASE_URL`
+3. URL por defecto de produccion
+
+Importante: el esquema de base de datos que esta en Railway es la referencia real en produccion. Si un campo no existe en esa tabla, el modelo de Node no debe intentar insertarlo ni actualizarlo.
+
 ### 2) Frontend
 
 En la raiz del proyecto:
@@ -165,7 +191,7 @@ Nota: node_modules/ no se incluye en el arbol.
 
 ## API principal
 
-Base URL: http://localhost:3001/api
+Base URL: configurable desde `window.__API_BASE_URL__` o `localStorage.API_BASE_URL`. Si no se define, el frontend usa la URL de produccion por defecto.
 
 - Auth
     - POST /auth/login

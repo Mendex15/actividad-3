@@ -182,7 +182,7 @@ const payroll = (() => {
                     const { month, year } = Helpers.getCurrentMonth();
                     
                     // Llamar a endpoint de generación de nómina
-                    const response = await fetch('http://localhost:3001/api/employees/generate-payroll', {
+                    const response = await fetch(`${window.__API_BASE_URL__ || localStorage.getItem('API_BASE_URL') || 'https://actividad-3-bibt.onrender.com/api'}/employees/generate-payroll`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

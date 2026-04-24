@@ -17,8 +17,8 @@ class Employee {
                 INSERT INTO employees 
                 (user_id, name, employee_type, years_in_company, monthly_salary, 
                  hourly_rate, hours_worked, has_savings_fund, base_salary, 
-                 commission_rate, sales, ci, email, phone, department)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 commission_rate, sales, ci, email, phone)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `;
 
             const values = [
@@ -35,8 +35,7 @@ class Employee {
                 employeeData.sales || null,
                 employeeData.ci || null,
                 employeeData.email || null,
-                employeeData.phone || null,
-                employeeData.department || null
+                employeeData.phone || null
             ];
 
             const result = await query(sql, values);
@@ -100,7 +99,7 @@ class Employee {
                 'name', 'employee_type', 'years_in_company',
                 'monthly_salary', 'hourly_rate', 'hours_worked',
                 'has_savings_fund', 'base_salary', 'commission_rate',
-                'sales', 'ci', 'email', 'phone', 'department'
+                'sales', 'ci', 'email', 'phone'
             ];
 
             for (const field of updateableFields) {

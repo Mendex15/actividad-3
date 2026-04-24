@@ -7,7 +7,8 @@
 
 const APIService = (() => {
     // ====== CONFIGURACIÓN ======
-    const BASE_URL = 'https://actividad-3-bibt.onrender.com/api';
+    const DEFAULT_BASE_URL = 'https://actividad-3-bibt.onrender.com/api';
+    const BASE_URL = window.__API_BASE_URL__ || localStorage.getItem('API_BASE_URL') || DEFAULT_BASE_URL;
     const TOKEN_STORAGE_KEY = 'token';
     const REQUEST_TIMEOUT = 30000; // 30 segundos
     const HTTP_STATUS = {
